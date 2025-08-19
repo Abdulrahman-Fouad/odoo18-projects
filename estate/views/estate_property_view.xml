@@ -3,44 +3,79 @@
         <field name="name">property form</field>
         <field name="model">estate.property</field>
         <field name="arch" type="xml">
-            <form string="Properties">
+            <form>
                 <sheet>
+                    <div>
+                        <label for="name" string="Title"/>
+                        <h1>
+                            <field name="name"/>
+                        </h1>
+                    </div>
+                    <group>
                         <group>
-                            <field name="name" string="Title"/>
-                            <field name="description"/>
+                            <field name="postcode"/>
+                            <field name="date_availability" string="Available From"/>
                         </group>
                         <group>
+                            <field name="expected_price"/>
+                            <field name="selling_price"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Description">
                             <group>
-                                <field name="postcode"/>
-                                <field name="expected_price"/>
+                                <field name="description"/>
                                 <field name="bedrooms"/>
-                                <field name="facades"/>
-                                <field name="garden"/>
-                                <field name="garden_orientation"/>
-                                <field name="active"/>
-                            </group>
-                            <group>
-                                <field name="date_availability" string="Available From"/>
-                                <field name="selling_price"/>
                                 <field name="living_area"/>
+                                <field name="facades"/>
                                 <field name="garage"/>
-                                <field name="garden_area"/>
-                                <field name="state" string="Status"/>
+                                <field name="garden"/>
+                                <field name="garden_area" string="Garden Area (sqm)"/>
+                                <field name="garden_orientation"/>
                             </group>
-                        </group>
+                        </page>
+                    </notebook>
+                    <!--                    <field name="active"/>-->
+                    <!--                    <field name="state" string="Status"/>-->
                 </sheet>
             </form>
         </field>
     </record>
 
-    <record id="property_tree_view" model="ir.ui.view">
-        <field name="name">property tree</field>
+    <record id="property_list_view" model="ir.ui.view">
+        <field name="name">property list</field>
         <field name="model">estate.property</field>
         <field name="arch" type="xml">
             <list>
                 <field name="name" string="Title"/>
+                <field name="postcode"/>
+                <field name="bedrooms"/>
+                <field name="living_area" string="Living Area (sqm)"/>
+                <field name="expected_price"/>
+                <field name="selling_price"/>
+                <field name="date_availability" string="Available From"/>
             </list>
         </field>
+    </record>
+
+    <record id="property_search_view" model="ir.ui.view">
+        <field name="name">Property Search</field>
+        <field name="model">estate.property</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name" string="Title"/>
+                <field name="postcode"/>
+                <field name="expected_price"/>
+                <field name="bedrooms"/>
+                <field name="living_area" string="Living Area (sqm)"/>
+                <field name="facades"/>
+
+                <filter name="property_filter_available" string="Available" domain="['|', ('state','=', 'new'), ('state','=', 'offer_received')]"/>
+
+                <filter name="property_groupby_postcode" string="Postcode" context="{'group_by': 'postcode'}"/>
+            </search>
+        </field>
+
     </record>
 
     <record id="estate_property_action" model="ir.actions.act_window">
