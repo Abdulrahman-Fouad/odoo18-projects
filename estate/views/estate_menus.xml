@@ -11,4 +11,10 @@
             parent="estate_root"
     />
 
+    <menuitem
+            id="settings_menu"
+            name="Settings"
+            parent="estate_root"
+    />
+
 </odoo>

@@ -6,13 +6,15 @@
             <form>
                 <sheet>
                     <div>
-                        <label for="name" string="Title"/>
                         <h1>
                             <field name="name"/>
                         </h1>
                     </div>
                     <group>
+                        <field name="tag_ids" widget="many2many_tags"/>
+                        <separator/>
                         <group>
+                            <field name="property_type_id"/>
                             <field name="postcode"/>
                             <field name="date_availability" string="Available From"/>
                         </group>
@@ -34,6 +36,17 @@
                                 <field name="garden_orientation"/>
                             </group>
                         </page>
+
+                        <page string="Offers">
+                                <field name="offer_ids"/>
+                        </page>
+
+                        <page string="Other Info">
+                            <group>
+                                <field name="salesperson_id"/>
+                                <field name="buyer_id"/>
+                            </group>
+                        </page>
                     </notebook>
                     <!--                    <field name="active"/>-->
                     <!--                    <field name="state" string="Status"/>-->
@@ -49,6 +62,7 @@
             <list>
                 <field name="name" string="Title"/>
                 <field name="postcode"/>
+                <field name="property_type_id"/>
                 <field name="bedrooms"/>
                 <field name="living_area" string="Living Area (sqm)"/>
                 <field name="expected_price"/>
@@ -69,10 +83,13 @@
                 <field name="bedrooms"/>
                 <field name="living_area" string="Living Area (sqm)"/>
                 <field name="facades"/>
+                <field name="property_type_id"/>
 
-                <filter name="property_filter_available" string="Available" domain="['|', ('state','=', 'new'), ('state','=', 'offer_received')]"/>
+                <filter name="property_filter_available" string="Available"
+                        domain="['|', ('state','=', 'new'), ('state','=', 'offer_received')]"/>
 
                 <filter name="property_groupby_postcode" string="Postcode" context="{'group_by': 'postcode'}"/>
+                <filter name="property_groupby_type" string="Type" context="{'group_by': 'property_type_id'}"/>
             </search>
         </field>
 
