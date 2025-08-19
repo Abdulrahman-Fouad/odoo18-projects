@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data>
+        <record id="estate_property_offer_form_view" model="ir.ui.view">
+            <field name="name">Property Offer Form</field>
+            <field name="model">estate.property.offer</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+                            <field name="price"/>
+                            <field name="partner_id"/>
+                            <field name="status"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="estate_property_offer_list_view" model="ir.ui.view">
+            <field name="name">Property Offer List</field>
+            <field name="model">estate.property.offer</field>
+            <field name="arch" type="xml">
+                <list>
+                    <field name="price"/>
+                    <field name="partner_id"/>
+                    <field name="status"/>
+                </list>
+            </field>
+        </record>
+
+<!--        <record id="estate_property_offer_search_view" model="ir.ui.view">-->
+<!--            <field name="name">Property Offer Search</field>-->
+<!--            <field name="model">estate.property.offer</field>-->
+<!--            <field name="arch" type="xml">-->
+<!--                <search>-->
+<!--                    <field name="name"/>-->
+
+<!--                    <filter name="property_offer_groupby_property" string="Property"-->
+<!--                            context="{'group_by': 'property_id'}"/>-->
+<!--                </search>-->
+<!--            </field>-->
+<!--        </record>-->
+
+<!--        <record id="estate_property_offer_action" model="ir.actions.act_window">-->
+<!--            <field name="name">Property Offer Action</field>-->
+<!--            <field name="res_model">estate.property.offer</field>-->
+<!--        </record>-->
+
+<!--        <menuitem-->
+<!--                name="Property Offer"-->
+<!--                id="property_offer_menu_item"-->
+<!--                parent="settings_menu"-->
+<!--                action="estate_property_offer_action"-->
+<!--        />-->
+    </data>
+</odoo>
