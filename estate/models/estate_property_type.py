@@ -7,3 +7,7 @@ class EstatePropertyType(models.Model):
 
     name = fields.Char(required=True)
 
+
+    _sql_constraints = [
+        ('unique_type_name', 'UNIQUE(name)', 'This Type already exists!!')
+    ]

@@ -1,8 +1,6 @@
 from dateutil import relativedelta
-
 from odoo import fields, models, api
 from odoo.exceptions import UserError
-from odoo.fields import Datetime
 
 
 class EstatePropertyOffer(models.Model):
@@ -19,6 +17,10 @@ class EstatePropertyOffer(models.Model):
 
     validity = fields.Integer(default=7, string="Validity (days)")
     date_deadline = fields.Date(compute="_compute_date_deadline", inverse="_inverse_date_deadline", string="Deadline")
+
+    _sql_constraints = [
+        ('positive_offer_price', 'CHECK(price > 0)', 'Property offer price must be a positive value!')
+    ]
 
     @api.depends("validity")
     def _compute_date_deadline(self):
@@ -46,4 +48,8 @@ class EstatePropertyOffer(models.Model):
 
     def offer_refuse(self):
         for record in self:
+            if record.status == 'accepted':
+                record.property_id.selling_price = False
+                record.property_id.buyer_id = False
+                record.property_id.state = 'offer_received'
             record.status = 'refused'
