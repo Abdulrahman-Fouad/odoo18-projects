@@ -1,6 +1,7 @@
 from dateutil import relativedelta
 
 from odoo import fields, models, api
+from odoo.exceptions import UserError
 from odoo.fields import Datetime
 
 
@@ -11,8 +12,8 @@ class EstatePropertyOffer(models.Model):
     name = fields.Char()
     price = fields.Float()
     status = fields.Selection([
-        ('accepted','Accepted'),
-        ('refused','Refused')], copy=False)
+        ('accepted', 'Accepted'),
+        ('refused', 'Refused')], copy=False)
     partner_id = fields.Many2one('res.partner', required=True)
     property_id = fields.Many2one('estate.property', string='Property', required=True)
 
@@ -22,11 +23,27 @@ class EstatePropertyOffer(models.Model):
     @api.depends("validity")
     def _compute_date_deadline(self):
         for record in self:
-            create_date = record.create_date.date() if record.create_date else fields.Date().today()
-            record.date_deadline = create_date + relativedelta.relativedelta(days= record.validity)
+            create_date = record.create_date.date() if record.create_date else fields.Date.today()
+            record.date_deadline = create_date + relativedelta.relativedelta(days=record.validity)
 
     def _inverse_date_deadline(self):
         for record in self:
             if record.date_deadline:
-                create_date = record.create_date.date() if record.create_date else fields.Date().today()
-                record.validity = (record.date_deadline - record.create_date.date()).days
+                create_date = record.create_date.date() if record.create_date else fields.Date.today()
+                record.validity = (record.date_deadline - create_date).days
+
+    def offer_accept(self):
+        for record in self:
+            record_property = record.property_id
+            offers_states = record_property.offer_ids.mapped('status')
+            if 'accepted' in offers_states and record.status != 'accepted':
+                raise UserError('Only one offer can be accepted for the property!')
+            else:
+                record.status = 'accepted'
+                record_property.selling_price = record.price
+                record_property.buyer_id = record.partner_id
+                record_property.state = 'offer_accepted'
+
+    def offer_refuse(self):
+        for record in self:
+            record.status = 'refused'
