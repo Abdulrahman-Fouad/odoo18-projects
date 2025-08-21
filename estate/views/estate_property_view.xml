@@ -69,7 +69,8 @@
         <field name="name">property list</field>
         <field name="model">estate.property</field>
         <field name="arch" type="xml">
-            <list>
+            <list decoration-success="state in ['offer_received', 'offer_accepted']" decoration-bf="state == 'offer_accepted'"
+                  decoration-muted="state == 'offer_accepted'">
                 <field name="name" string="Title"/>
                 <field name="postcode"/>
                 <field name="property_type_id"/>
@@ -77,7 +78,7 @@
                 <field name="living_area" string="Living Area (sqm)"/>
                 <field name="expected_price"/>
                 <field name="selling_price"/>
-                <field name="date_availability" string="Available From"/>
+                <field name="date_availability" string="Available From" optional="1"/>
             </list>
         </field>
     </record>
