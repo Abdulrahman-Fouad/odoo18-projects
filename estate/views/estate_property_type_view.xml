@@ -8,6 +8,10 @@
             <field name="arch" type="xml">
                 <form>
                     <sheet>
+                        <header>
+                            <button type="action" name="%(estate.estate_property_offer_action)d" string="Offers"
+                                    icon="fa-dollar"/>
+                        </header>
                         <div>
                             <h1>
                                 <field name="name"/>

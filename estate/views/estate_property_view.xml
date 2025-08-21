@@ -5,9 +5,7 @@
         <field name="arch" type="xml">
             <form>
                 <header>
-                    <button type="object" name="sell_property" string="Sold"
-                            invisible="state != 'offer_accepted'"
-                    />
+                    <button type="object" name="sell_property" string="Sold" invisible="state != 'offer_accepted'" />
                     <button type="object" name="cancel_property" string="Cancel" invisible="state in ['sold', 'cancelled']"/>
                     <field name="state" widget="statusbar" statusbar_visible="new, offer_received, offer_accepted, sold"/>
                 </header>
@@ -92,7 +90,7 @@
                 <field name="postcode"/>
                 <field name="expected_price"/>
                 <field name="bedrooms"/>
-                <field name="living_area" string="Living Area (sqm)"/>
+                <field name="living_area" string="Living Area (sqm)" filter_domain="[('living_area', '>=', self)]"/>
                 <field name="facades"/>
                 <field name="property_type_id"/>
 
@@ -109,6 +107,7 @@
     <record id="estate_property_action" model="ir.actions.act_window">
         <field name="name">Properties</field>
         <field name="res_model">estate.property</field>
+        <field name="context">{'search_default_property_filter_available': true}</field>
     </record>
 
     <menuitem
