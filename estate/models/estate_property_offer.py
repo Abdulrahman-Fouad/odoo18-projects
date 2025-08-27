@@ -51,3 +51,17 @@ class EstatePropertyOffer(models.Model):
     def offer_refuse(self):
         for record in self:
             record.status = 'refused'
+
+    @api.model
+    def create(self, vals):
+        offer_property = self.env['estate.property'].browse(vals['property_id'])
+        offer_property.state = 'offer_received'
+
+        #The next two commented lines are not the best way for performance, the best way is to take the best_price directly as I did later#
+        # property_offer_list = offer_property.offer_ids.mapped('price')
+        # maximum_offer = max(property_offer_list) if property_offer_list else 0
+
+        maximum_offer = offer_property.best_price
+        if vals['price'] <= maximum_offer:
+            raise UserError(f"The offer must be higher than {maximum_offer}")
+        return super().create(vals)
