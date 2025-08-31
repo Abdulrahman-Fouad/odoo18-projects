@@ -5,9 +5,11 @@
         <field name="arch" type="xml">
             <form>
                 <header>
-                    <button type="object" name="sell_property" string="Sold" invisible="state != 'offer_accepted'" />
-                    <button type="object" name="cancel_property" string="Cancel" invisible="state in ['sold', 'cancelled']"/>
-                    <field name="state" widget="statusbar" statusbar_visible="new, offer_received, offer_accepted, sold"/>
+                    <button type="object" name="sell_property" string="Sold" invisible="state != 'offer_accepted'"/>
+                    <button type="object" name="cancel_property" string="Cancel"
+                            invisible="state in ['sold', 'cancelled']"/>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="new, offer_received, offer_accepted, sold"/>
                 </header>
                 <sheet>
                     <div>
@@ -41,12 +43,12 @@
                                 <field name="garden"/>
                                 <field name="garden_area" string="Garden Area (sqm)" invisible="not garden"/>
                                 <field name="garden_orientation" invisible="not garden"/>
-                                <field name="total_area" string="Total Area (sqm)" />
+                                <field name="total_area" string="Total Area (sqm)"/>
                             </group>
                         </page>
 
                         <page string="Offers">
-                                <field name="offer_ids" readonly="state in ['offer_accepted', 'sold', 'cancelled']"/>
+                            <field name="offer_ids" readonly="state in ['offer_accepted', 'sold', 'cancelled']"/>
                         </page>
 
                         <page string="Other Info">
@@ -67,7 +69,8 @@
         <field name="name">property list</field>
         <field name="model">estate.property</field>
         <field name="arch" type="xml">
-            <list decoration-success="state in ['offer_received', 'offer_accepted']" decoration-bf="state == 'offer_accepted'"
+            <list decoration-success="state in ['offer_received', 'offer_accepted']"
+                  decoration-bf="state == 'offer_accepted'"
                   decoration-muted="state == 'offer_accepted'">
                 <field name="name" string="Title"/>
                 <field name="postcode"/>
@@ -81,7 +84,73 @@
         </field>
     </record>
 
+    <record id="property_kanban_view" model="ir.ui.view">
+        <field name="name">property kanban</field>
+        <field name="model">estate.property</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="property_type_id" group_create="False" records_draggable="False" groups_draggable="False">
+                <field name="state"/>
+                <field name="name"/>
+                <field name="expected_price"/>
+                <field name="best_price"/>
+                <field name="selling_price"/>
+
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_global_click o_kanban_record">
+
+                            <!-- Property Title -->
+                            <div class="o_kanban_primary_left">
+                                <strong>
+                                    <field name="name"/>
+                                </strong>
+                            </div>
+
+                            <!-- Price Section -->
+                            <div class="o_kanban_details mt-2">
+                                <span class="text-muted">Expected Price: </span>
+                                <field name="expected_price" widget="monetary"
+                                       options="{'currency_field': 'currency_id'}"/>
+                            </div>
+
+                            <!-- Offer / Selling Info -->
+                            <div class="o_kanban_details mt-2">
+                                <div t-if="record.state.raw_value == 'offer_received'">
+                                    <span class="text-muted">
+                                        Best Offer:
+                                        <field name="best_price" widget="monetary"
+                                               options="{'currency_field': 'currency_id'}"/>
+                                    </span>
+                                </div>
+
+                                <div t-if="record.state.raw_value == 'offer_accepted'">
+                                    <span class="badge rounded-pill bg-success">
+                                        Sold at:
+                                        <field name="selling_price" widget="monetary"
+                                               options="{'currency_field': 'currency_id'}"/>
+                                    </span>
+                                </div>
+
+                                <div t-if="record.state.raw_value == 'cancelled'">
+                                    <span class="badge rounded-pill bg-danger">Cancelled</span>
+                                </div>
+                            </div>
+                            <footer>
+                                <div>
+                                    <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                                </div>
+                            </footer>
+
+
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
     <record id="property_search_view" model="ir.ui.view">
+
         <field name="name">Property Search</field>
         <field name="model">estate.property</field>
         <field name="arch" type="xml">
@@ -107,6 +176,7 @@
     <record id="estate_property_action" model="ir.actions.act_window">
         <field name="name">Properties</field>
         <field name="res_model">estate.property</field>
+        <field name="view_mode">list,form,kanban</field>
         <field name="context">{'search_default_property_filter_available': true}</field>
     </record>
 
